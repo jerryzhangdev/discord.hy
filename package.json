@@ -1,0 +1,29 @@
+{
+  "name": "discord.hy",
+  "version": "1.2.2",
+  "description": "A advanced **modern** discord bot making package using it's official api.",
+  "main": "./src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "discord",
+    "discord.py",
+    "discord.js",
+    "discord.hy",
+    "hydrogen",
+    "hydrogenbot",
+    "javascript",
+    "python",
+    "discordapi",
+    "api"
+  ],
+  "author": "Hydrogen Studio <hydrogen.studio.llc@gmail.com>",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "fs": "0.0.1-security",
+    "quick.db": "^7.1.1",
+    "request": "^2.88.2",
+    "ws": "^7.2.3"
+  }
+}
