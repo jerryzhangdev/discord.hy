@@ -8,7 +8,14 @@ const tokendb = new qdb.table("discordhy")
 let websocketdata;
 var wss = new WebSocket('wss://gateway.discord.gg?v=6');
 
-
+function IsJsonString(str) {
+    try {
+        JSON.parse(str);
+    } catch (e) {
+        return false;
+    }
+    return true;
+}
     
 class Client {
 	constructor(options = {}){
@@ -102,6 +109,19 @@ class Client {
         if(!channel)throw new Error("Channel to send not defined!")
         //if(typeof channel !== 'number')throw new TypeError("Type of parameter channel must be a number")
         if(!content)throw new Error("Content to send not defined!")
+        
+        let msg;
+        if(IsJsonString(content) === true){
+            msg = {
+                "content": content,
+	            "embed": {}
+            }
+        }else{
+            msg = {
+                "content": "",
+	            "embed": content
+            }
+        }
         var options = {
           'method': 'POST',
           'url': `https://discordapp.com/api/channels/${channel}/messages`,
@@ -110,7 +130,7 @@ class Client {
             'content-type': 'application/json',
             'Cookie': '__cfduid=d691ce9608d2f2417dea1a984b9cb46aa1587146073; __cfruid=1c5bf67d2aa9e7bc76ced134a29a051b862dc121-1587146073'
           },
-          body: JSON.stringify({"content": content})
+          body: JSON.stringify(msg)
         };
         request(options, function (error, response) { 
           if(JSON.parse(response.body).message === "Unknown Channel")throw new Error("Discord API error: I can't find the channel")
@@ -118,8 +138,6 @@ class Client {
         });
     }
 
-
-    getChannel()
     
 
     on(event, callback){
