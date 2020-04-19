@@ -3,7 +3,11 @@ let client = new Discord.Client({ websocketstat: true, debug: true });//set up c
 
 client.on("message", function(msg){//call in the 'message' event
     if(msg.content.startsWith("!ping")){//check the message content for !ping
-        console.log(Embed)
+        let Embed = new Discord.RichEmbed()
+            .setTitle("test")
+            .setDescription("test")
+            .addField("test", 'test', false)
+            .setColor("RANDOM");
         client.sendMessage(msg.channel_id, Embed)//send response
     }
 })
@@ -15,4 +19,4 @@ client.on("ready", function(data){//call in the 'ready' event
  
  
  
-let login = client.login("Your secret token!")
+let login = client.login("Njg4NDI3MDg1NjE3NjkyOTYw.XpyDVw.m8AVVawDpa6kOa9Ladbv0np9Vjc")
