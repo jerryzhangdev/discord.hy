@@ -1,6 +1,6 @@
 {
   "name": "discord.hy",
-  "version": "1.2.2",
+  "version": "1.2.8-readme",
   "description": "A advanced **modern** discord bot making package using it's official api.",
   "main": "./src/index.js",
   "scripts": {
@@ -25,5 +25,13 @@
     "quick.db": "^7.1.1",
     "request": "^2.88.2",
     "ws": "^7.2.3"
-  }
+  },
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/hydrogen-studio/discord.hy"
+  },
+  "bugs": {
+    "url": "https://github.com/hydrogen-studio/discord.hy/issues"
+  },
+  "homepage": "https://hydrogenapi.gitbook.io/discordhy/"
 }

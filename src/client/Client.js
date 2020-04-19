@@ -116,10 +116,10 @@ class Client {
           if(JSON.parse(response.body).message === "Unknown Channel")throw new Error("Discord API error: I can't find the channel")
           if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error("discord api error: you are not logged in");
         });
-
-
     }
 
+
+    getChannel()
     
 
     on(event, callback){
