@@ -1,4 +1,4 @@
-# DISCORD.HY
+# DISCORD.HY v1.3.0
 
 <br>
 
@@ -21,14 +21,12 @@
 ## Info
 
 
-Documentation: Currently Unavailable As we are getting a subdomain from js.org
+Documentation: [https://discordhy.js.org](https://discordhy.js.org)
 
 
 Discord: [Support Server](https://discord.gg/97WZQ9p)
 
 ## Stats
-
-34 Total websocket events
 <br>
 <img alt="npm" src="https://img.shields.io/npm/v/discord.hy">
 <img alt="npm bundle size" src="https://img.shields.io/bundlephobia/minzip/discord.hy?label=discord.hy%20file%20size&style=plastic">
@@ -49,21 +47,27 @@ Our goal is to reached 100% api coverage at the end of 2020.
 ```js
 let Discord = require("discord.hy")// import library | npm i discord.hy
 let client = new Discord.Client({ websocketstat: true });//set up client with options
-
-
+ 
+ 
 client.on("message", function(msg){//call in the 'message' event
-	if(msg.content.startsWith("!ping")){//check the message content for !ping
-		client.sendMessage(msg.channel_id, "Ping!")//send response
-	}
+    if(msg.content.startsWith("!ping")){//check the message content for !ping
+        let Embed = new Discord.RichEmbed()
+           .setTitle("Ping Command Response")
+           .addField("Ping", "Pong", true)
+           .addField("Ping", "Pong")//inline default to false
+           .setTimestamp()
+           .setColor("RANDOM");
+        msg.channel.send(Embed)//send response
+    }
 })
-
-
+ 
+ 
 client.on("ready", function(data){//call in the 'ready' event
-	console.log(data)//log the ready data in the console
+    console.log(data)//log the ready data in the console
 })
-
-
-
+ 
+ 
+ 
 let login = client.login("super secret bot token")
 ```
 

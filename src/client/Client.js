@@ -2,9 +2,11 @@
 
 const request = require("request")
 const WebSocket = require('ws');
-
+const Channel = require("./actions/channelManager.js")
+const Author = require("./actions/author.js")
 const qdb = require("quick.db")
-const tokendb = new qdb.table("discordhy")
+const tokendb = new qdb.table("discordhytoken")
+const db = new qdb.table("discordhydb")
 let websocketdata;
 var wss = new WebSocket('wss://gateway.discord.gg?v=6');
 
@@ -111,7 +113,7 @@ class Client {
         if(!content)throw new Error("Content to send not defined!")
         
         let msg;
-        if(IsJsonString(content) === true){
+        if(IsJsonString(content) === false){
             msg = {
                 "content": content,
 	            "embed": {}
@@ -319,7 +321,9 @@ class Client {
         if(event === "message"){
             wss.on('message', function(data){
                 if(JSON.parse(data).t !== "MESSAGE_CREATE")return;
-                return callback(JSON.parse(data).d)
+                this.channel = new Channel(JSON.parse(data).d)
+                this.author = new Author(JSON.parse(data).d.author)
+                return callback(this, JSON.parse(data).d)
             })
         }
 

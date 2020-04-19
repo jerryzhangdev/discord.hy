@@ -79,7 +79,9 @@ class RichEmbed {
 
 
 	addField(name, value, inline){
-		let finline;
+		if(!inline){
+			inline = false
+		}
 		this.addFields({ name, value, inline })
 		return this
 	}
