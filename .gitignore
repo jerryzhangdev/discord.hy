@@ -2,3 +2,5 @@
 *.sqlite
 json.sqlite
 *.sqlite
+test/test.js
+json.sqlite
