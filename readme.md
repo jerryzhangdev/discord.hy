@@ -24,7 +24,7 @@
 Documentation: [https://discordhy.js.org](https://discordhy.js.org)
 
 
-Discord: [Support Server](https://discord.gg/97WZQ9p)
+Discord: New server coming soon
 
 ## Stats
 <br>
