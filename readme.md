@@ -1,4 +1,4 @@
-# DISCORD.HY v1.3.0
+# DISCORD.HY v1.3.3
 
 <br>
 
