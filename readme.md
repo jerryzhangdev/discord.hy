@@ -57,7 +57,7 @@ client.on("message", function(msg){//call in the 'message' event
            .addField("Ping", "Pong")//inline default to false
            .setTimestamp()
            .setColor("RANDOM");
-        msg.channel.send(Embed)//send response
+        msg.channel.sendEmbed(Embed)//send Embed response
     }
 })
  

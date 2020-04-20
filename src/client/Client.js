@@ -86,7 +86,7 @@ class Client {
                 "d": seq
             }
             wss.send(JSON.stringify(hbdata))
-        }, 45000)
+        }, 41250)
 
 
 
@@ -137,6 +137,7 @@ class Client {
         request(options, function (error, response) { 
           if(JSON.parse(response.body).message === "Unknown Channel")throw new Error("Discord API error: I can't find the channel")
           if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error("discord api error: you are not logged in");
+          return JSON.parse(response.body)
         });
     }
 
@@ -321,9 +322,10 @@ class Client {
         if(event === "message"){
             wss.on('message', function(data){
                 if(JSON.parse(data).t !== "MESSAGE_CREATE")return;
-                this.channel = new Channel(JSON.parse(data).d)
+                this.channel = new Channel(JSON.parse(data).d);
                 this.author = new Author(JSON.parse(data).d.author)
-                return callback(this, JSON.parse(data).d)
+                this.data = JSON.parse(data).d
+                return callback(this)
             })
         }
 
