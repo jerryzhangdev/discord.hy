@@ -2,7 +2,7 @@
 
 <br>
 
-### Welcome to Discord.hy, developed by Hydrogen Studio.
+### Welcome to Discord.hy, the most **modern** discord bot making library, developed by Hydrogen Studio.
 
 <br>
 
