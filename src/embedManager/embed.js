@@ -1,6 +1,6 @@
 'use strict';
 
-const Util = require('../util/Util');
+const Util = require('../util/util');
 
 /**
  * Represents an embed in a message (image/video preview, rich embed, etc.)
