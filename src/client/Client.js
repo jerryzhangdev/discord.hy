@@ -23,11 +23,18 @@ class Client {
 	constructor(options = {}){
         this.websocketstat = options.websocketstat
         this.debug = options.debug
+        this.reconnect = options.reconnect
         if(this.websocketstat){
             if(typeof this.websocketstat !== 'boolean')throw new TypeError("option websocketstat must be boolean")
         }
         if(this.debug){
             if(typeof this.debug !== 'boolean')throw new TypeError("option debug must be boolean")
+        }
+        if(this.reconnect){
+            if(typeof this.reconnect !== 'boolean')throw new TypeError("option reconnect must be boolean")
+        }
+        if(!this.reconnect){
+            this.reconnect === false
         }
 	}
 
@@ -70,6 +77,25 @@ class Client {
                 console.log('WebSocket Connection Lost!')
             })
         }
+
+        if(this.reconnect === true){
+            wss.on('close', ws => {
+                console.log('Websocket connection lost...Reconecting')
+                let data = {
+                "op": 2,
+                "d": {
+                    "token": logintoken,
+                    "properties": {
+                      "$os": "windows"
+                    }
+                }
+                }
+                wss.send(JSON.stringify(data))
+                console.log("Reconnected")
+            })
+        }
+
+
         let seq;
         wss.on('message', data => {
             websocketdata = data

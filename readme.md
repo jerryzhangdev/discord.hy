@@ -1,7 +1,5 @@
 # DISCORD.HY
 
-<br>
-
 ### Welcome to Discord.hy, the most **modern** discord bot making library, developed by Hydrogen Studio.
 
 <br>
