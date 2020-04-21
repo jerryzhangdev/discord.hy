@@ -3,8 +3,11 @@
     "",
     "\\src",
     "\\src\\client",
+    "\\src\\client\\actions",
+    "\\src\\embedManager",
+    "\\src\\util",
     "\\test"
   ],
-  "SelectedNode": "\\src\\client\\Client.js",
+  "SelectedNode": "\\src\\embedManager\\embed.js",
   "PreviewInSolutionExplorer": false
 }

@@ -11,7 +11,7 @@ class channel {
 
   sendEmbed(content){
     if(!content)throw new Error("Content to send not defined!")
-        
+    if(content === "")throw new Error("cannot send an empty message")
         let msg;
             msg = {
                 "content": "",
@@ -27,7 +27,6 @@ class channel {
           },
           body: JSON.stringify(msg)
         };
-        console.log(msg)
         request(options, function (error, response) { 
           if(JSON.parse(response.body).message === "Unknown Channel")throw new Error("Discord API error: I can't find the channel")
           if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error("discord api error: you are not logged in");
@@ -38,7 +37,7 @@ class channel {
 
   sendMessage(content){
     if(!content)throw new Error("Content to send not defined!")
-        
+    if(content === "")throw new Error("cannot send an empty message")
         let msg;
             msg = {
                 "content": content
