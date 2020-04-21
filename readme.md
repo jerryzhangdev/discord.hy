@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 # DISCORD.HY
-=======
-# DISCORD.HY v1.3.3
->>>>>>> 21ca3df515824635c0b2468178efe829e2072378
 
 <br>
 
