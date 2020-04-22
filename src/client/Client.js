@@ -3,13 +3,16 @@
 const request = require("request")
 const WebSocket = require('ws');
 const Channel = require("./actions/channelManager.js")
-const Author = require("./actions/author.js")
+const User = require("./actions/userManager.js")
+const Guild = require("./actions/guildManager.js")
 const qdb = require("quick.db")
 const tokendb = new qdb.table("discordhytoken")
 const db = new qdb.table("discordhydb")
 let websocketdata;
 var wss = new WebSocket('wss://gateway.discord.gg?v=6');
+const { DiscordAPI, TypeErrors, KeyMissingError, httpErrors } = require("../Error/Errors.js")
 
+const fetch = require("node-fetch")
 function IsJsonString(str) {
     try {
         JSON.parse(str);
@@ -18,20 +21,20 @@ function IsJsonString(str) {
     }
     return true;
 }
-    
+
 class Client {
 	constructor(options = {}){
         this.websocketstat = options.websocketstat
         this.debug = options.debug
         this.reconnect = options.reconnect
         if(this.websocketstat){
-            if(typeof this.websocketstat !== 'boolean')throw new TypeError("option websocketstat must be boolean")
+            if(typeof this.websocketstat !== 'boolean')throw new TypeError(TypeErrors.BOOLEAN)
         }
         if(this.debug){
-            if(typeof this.debug !== 'boolean')throw new TypeError("option debug must be boolean")
+            if(typeof this.debug !== 'boolean')throw new TypeError(TypeErrors.BOOLEAN)
         }
         if(this.reconnect){
-            if(typeof this.reconnect !== 'boolean')throw new TypeError("option reconnect must be boolean")
+            if(typeof this.reconnect !== 'boolean')throw new TypeError(TypeErrors.BOOLEAN)
         }
         if(!this.reconnect){
             this.reconnect === false
@@ -41,7 +44,8 @@ class Client {
 	async login(logintoken){
         this.token = logintoken
 		
-        if(!logintoken || logintoken === null)throw new TypeError("Login token not defined")
+        if(!logintoken || logintoken === "")throw new Error(DiscordAPI.NO_TOKEN)
+        if(typeof logintoken !== "string")throw new TypeError(TypeErrors.STRING)
         var options = {
             'method': 'GET',
             'url': 'https://discordapp.com/api/users/@me',
@@ -52,7 +56,7 @@ class Client {
             };
         
         request(options, (error, response) => { 
-            if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error("discord api error: invalid token");
+            if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error(DiscordAPI.INVALID_TOKEN);
         });
     
         wss.on('open', ws => {
@@ -134,9 +138,9 @@ class Client {
     }
 
     sendMessage(channel, content){
-        if(!channel)throw new Error("Channel to send not defined!")
-        //if(typeof channel !== 'number')throw new TypeError("Type of parameter channel must be a number")
-        if(!content)throw new Error("Content to send not defined!")
+        if(!channel)KeyMissingError("channel")
+        if(typeof channel !== 'number')throw new TypeError(TypeErrors.NUMBER)
+        if(!content)KeyMissingError("content")
         
         let msg;
         if(IsJsonString(content) === false){
@@ -161,8 +165,8 @@ class Client {
           body: JSON.stringify(msg)
         };
         request(options, function (error, response) { 
-          if(JSON.parse(response.body).message === "Unknown Channel")throw new Error("Discord API error: I can't find the channel")
-          if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error("discord api error: you are not logged in");
+          if(JSON.parse(response.body).message === "Unknown Channel")console.log(DiscordAPI.CHANNEL_UNDEFINED)
+          if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error(httpErrors.UNAUTHORIZED);
           return JSON.parse(response.body)
         });
     }
@@ -170,9 +174,9 @@ class Client {
     
 
     on(event, callback){
-        if(!event)throw new Error("Required Value EVENT not inputted")
-        if(!callback)throw new Error("required callback function is undefined")
-        if(typeof callback !== "function")throw new TypeError("Callback function must be a function")
+        if(!event)KeyMissingError("event")
+        if(!callback)KeyMissingError("callback")
+        if(typeof callback !== "function")throw new TypeError(TypeErrors.FUNCTION)
 
 
         //channelCreate
@@ -346,11 +350,23 @@ class Client {
 
         //message
         if(event === "message"){
-            wss.on('message', function(data){
+            wss.on('message', async function(data){
                 if(JSON.parse(data).t !== "MESSAGE_CREATE")return;
                 this.channel = new Channel(JSON.parse(data).d);
-                this.author = new Author(JSON.parse(data).d.author)
+                this.author = new User(JSON.parse(data).d.author)
+                
                 this.data = JSON.parse(data).d
+
+                    let resp = await fetch(`https://discordapp.com/api/guilds/${JSON.parse(data).d.guild_id}`, {
+                        method: 'get',
+                        headers: {
+                            "Authorization": `Bot ${tokendb.get("token.token")}`
+                        }
+                    })
+
+                let guildData = await resp.json()
+
+                this.guild = new Guild(JSON.stringify(guildData))
                 return callback(this)
             })
         }

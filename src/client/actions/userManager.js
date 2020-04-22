@@ -5,7 +5,7 @@ const qdb = require("quick.db")
 const request = require("request")
 const tokendb = new qdb.table("discordhytoken")
 
-class author {
+class userManager {
   constructor(client) {
     this.client = client
   }
@@ -103,4 +103,4 @@ class author {
 
  }
 
-module.exports = author
+module.exports = userManager

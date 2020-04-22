@@ -22,13 +22,14 @@
   "license": "Apache-2.0",
   "dependencies": {
     "fs": "0.0.1-security",
+    "node-fetch": "^2.6.0",
     "quick.db": "^7.1.1",
     "request": "^2.88.2",
     "ws": "^7.2.3"
   },
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/hydrogen-studio/discord.hy"
+    "type": "git",
+    "url": "https://github.com/hydrogen-studio/discord.hy"
   },
   "bugs": {
     "url": "https://github.com/hydrogen-studio/discord.hy/issues"
