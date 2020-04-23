@@ -120,56 +120,53 @@ class Client {
 
 
 
-        tokendb.set("token", { token: this.token })
+        tokendb.set("token", { token: this.token, messsage: "Hey! You are smart to figure out how to get here! But don't change the token here as it will mess your bot up." })
         return this.token
 	}
+
+
 
 
     sleep(ms) {
         return new Promise((resolve) => {
             setTimeout(resolve, ms);
         });
-    }   
+    } 
 
-    
+
+    async getChannel(id){
+
+            var options = {
+  'method': 'GET',
+  'headers': {
+    'Authorization': `Bot ${tokendb.get("token.token")}`,
+    'Cookie': '__cfduid=d62bef48329670a370c27df97f1a81eba1587580440; __cfruid=bf4b45e1a6e5ef27d99bc35b0eab7581881c3b8c-1587580440'
+  }
+};
+    let req = await fetch(`https://discordapp.com/api/channels/${id}`, options)
+    let data = await req.json()
+    this.datas = {
+  channel_id: data.id,
+  last_message_id: data.last_message_id,
+  type: data.type,
+  name: data.name,
+  position: data.position,
+  parent_id: data.parent_id,
+  topic: data.topic,
+  guild_id: data.guild_id,
+  permission_overwrites: data.permission_overwrites,
+  nsfw: data.nsfw,
+  rate_limit_per_user: data.rate_limit_per_user,
+  bot: true
+}
+    return new Channel(this.datas)
+    } 
 
     getToken(){
         return tokendb.get('token.token')
     }
 
-    sendMessage(channel, content){
-        if(!channel)KeyMissingError("channel")
-        if(typeof channel !== 'number')throw new TypeError(TypeErrors.NUMBER)
-        if(!content)KeyMissingError("content")
-        
-        let msg;
-        if(IsJsonString(content) === false){
-            msg = {
-                "content": content,
-	            "embed": {}
-            }
-        }else{
-            msg = {
-                "content": "",
-	            "embed": content
-            }
-        }
-        var options = {
-          'method': 'POST',
-          'url': `https://discordapp.com/api/channels/${channel}/messages`,
-          'headers': {
-            'Authorization': `Bot ${this.token}`,
-            'content-type': 'application/json',
-            'Cookie': '__cfduid=d691ce9608d2f2417dea1a984b9cb46aa1587146073; __cfruid=1c5bf67d2aa9e7bc76ced134a29a051b862dc121-1587146073'
-          },
-          body: JSON.stringify(msg)
-        };
-        request(options, function (error, response) { 
-          if(JSON.parse(response.body).message === "Unknown Channel")console.log(DiscordAPI.CHANNEL_UNDEFINED)
-          if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error(httpErrors.UNAUTHORIZED);
-          return JSON.parse(response.body)
-        });
-    }
+    
 
     
 

@@ -4,10 +4,31 @@ const qdb = require("quick.db")
 
 const request = require("request")
 const tokendb = new qdb.table("discordhytoken")
-
+const { DiscordAPI, TypeErrors, KeyMissingError, httpErrors } = require("../../Error/Errors.js")
 class userManager {
   constructor(client) {
     this.client = client
+    if(client) this._patch()
+  }
+  /*
+  {
+    username: 'Nitrogen',
+    public_flags: 0,
+    id: '688427085617692960',
+    discriminator: '0862',
+    bot: true,
+    avatar: null
+  }
+  */
+  _patch(){
+    this.username = this.client.username;
+    this.id = this.client.id;
+    this.publicFlags = this.client.public_flags;
+    this.discriminator = this.client.discriminator;
+    this.tag = this.client.username + '#' + this.client.discriminator;
+    if(this.client.bot){
+    this.bot = true
+    }
   }
 
   sendMessage(content){
@@ -23,8 +44,8 @@ class userManager {
 
     };
     request(options, function (error, response) { 
-          if(JSON.parse(response.body).message === "Unknown Channel")throw new Error("Discord API error: I can't find the channel")
-          if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error("discord api error: you are not logged in");
+          if(JSON.parse(response.body).message === "Unknown Channel")KeyMissingError("channel")
+          if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error(httpErrors.UNAUTHORIZED)
         var options = {
           'method': 'POST',
           'url': `https://discordapp.com/api/channels/${JSON.parse(response.body).id}/messages`,
@@ -36,8 +57,8 @@ class userManager {
           body: JSON.stringify({ "content": content })
         };
         request(options, function (error, res) { 
-          if(JSON.parse(res.body).message === "Unknown Channel")throw new Error("Discord API error: I can't find the channel")
-          if(JSON.parse(res.body).message === "401: Unauthorized")throw new Error("discord api error: you are not logged in");
+          if(JSON.parse(res.body).message === "Unknown Channel")console.error(DiscordAPI.UNKNOWN_CHANNEL)
+          if(JSON.parse(res.body).message === "401: Unauthorized")throw new Error(httpErrors.UNAUTHORIZED);
           return JSON.parse(res.body)
         });
     });
@@ -59,8 +80,8 @@ class userManager {
 
     };
     request(options, function (error, response) { 
-          if(JSON.parse(response.body).message === "Unknown Channel")throw new Error("Discord API error: I can't find the channel")
-          if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error("discord api error: you are not logged in");
+          if(JSON.parse(response.body).message === "Unknown Channel")console.error(httpErrors.UNKNOWN_CHANNEL)
+          if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error(httpErrors.UNAUTHORIZED);
         let msg;
             msg = {
                 "content": "",
@@ -77,8 +98,8 @@ class userManager {
           body: JSON.stringify(msg)
         };
         request(option, function (error, response) { 
-          if(JSON.parse(response.body).message === "Unknown Channel")throw new Error("Discord API error: I can't find the channel")
-          if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error("discord api error: you are not logged in");
+          if(JSON.parse(response.body).message === "Unknown Channel")console.error(httpErrors.UNKNOWN_CHANNEL)
+          if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error(httpErrors.UNAUTHORIZED);
           return JSON.parse(response.body)
         });
     });

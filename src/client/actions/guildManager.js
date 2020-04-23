@@ -4,6 +4,7 @@ const qdb = require("quick.db")
 const request = require("request")
 const tokendb = new qdb.table("discordhytoken")
 const fetch = require("node-fetch")
+const { DiscordAPI, TypeErrors, KeyMissingError, httpErrors } = require("../../Error/Errors.js")
 class guildManager {
   constructor(guildid) {
     this.client = JSON.parse(guildid)
@@ -70,6 +71,8 @@ _patch(){
 
     this.systemChannelFlags = client.system_channel_flags
 
+    this.systemChannelID = client.system_channel_id
+
     this.preferredLocale = client.preferred_locale
 
     this.rulesChannelID = client.rules_channel_id
@@ -81,6 +84,52 @@ _patch(){
     this.embedChannelID = client.embed_channel_id
 }
 
+
+
+
+    getPreview(){
+        var options = {
+          'method': 'GET',
+          'url': `https://discordapp.com/api/guilds/${this.client.id}/preview`,
+          'headers': {
+            'Authorization': `Bot ${tokendb.get("token.token")}`,
+          }
+        };
+        
+        return new Promise(function(resolve, reject){
+        request(options, function(error, response){
+          if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error(httpErrors.UNAUTHORIZED)
+          if(JSON.parse(response.body).message === "Unknown Guild")console.error(DiscordAPI.UNKNOWN_GUILD)
+          
+          return resolve(JSON.parse(response.body))
+        })
+        })
+        
+
+    }
+
+
+
+    
+    setName(name){
+        var options = {
+          'method': 'PATCH',
+          'url': `https://discordapp.com/api/guilds/${this.client.id}`,
+          'headers': {
+            'Authorization': `Bot ${tokendb.get('token.token')}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({"name": name})
+
+        };
+        return new Promise(function(resolve, reject){
+        request(options, function (error, response) { 
+          if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error(httpErrors.UNAUTHORIZED)
+          if(JSON.parse(response.body).message === "Unknown Guild")console.error(DiscordAPI.UNKNOWN_GUILD)
+          return resolve(JSON.parse(response.body))
+        });
+        })
+	}
 
  }
 

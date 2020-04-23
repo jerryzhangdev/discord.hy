@@ -1,7 +1,9 @@
 let DiscordErrors = {
 	INVALID_TOKEN: "Discord API Error: An INVALID discord login token has been provided",
 	NO_TOKEN: "Discord API Error: Discord login token must not be null!",
-	CHANNEL_UNDEFINED: "Discord API Error: Channel Not Found"
+	CHANNEL_UNDEFINED: "Discord API Error: Channel Not Found",
+	UNKNOWN_GUILD: "Discord API Error: Unknown Guild",
+	UNKNOWN_CHANNEL: "Discord API Error: Unknown Channel"
 }
 
 let httpErrors = {

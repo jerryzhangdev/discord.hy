@@ -1,17 +1,18 @@
 "use strict";
 
 const qdb = require("quick.db")
-
+const { DiscordAPI, TypeErrors, KeyMissingError, httpErrors } = require("../../Error/Errors.js")
 const request = require("request")
 const tokendb = new qdb.table("discordhytoken")
 class channel {
   constructor(client) {
     this.client = client
+    console.log(client)
   }
 
   sendEmbed(content){
-    if(!content)throw new Error("Content to send not defined!")
-    if(content === "")throw new Error("cannot send an empty message")
+    if(!content)KeyMissingError("Content")
+    if(content === "")KeyMissingError("Content")
         let msg;
             msg = {
                 "content": "",
@@ -28,16 +29,16 @@ class channel {
           body: JSON.stringify(msg)
         };
         request(options, function (error, response) { 
-          if(JSON.parse(response.body).message === "Unknown Channel")throw new Error("Discord API error: I can't find the channel")
-          if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error("discord api error: you are not logged in");
+          if(JSON.parse(response.body).message === "Unknown Channel")console.error(DiscordAPI.UNKNOWN_CHANNEL)
+          if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error(httpErrors.UNAUTHORIZED);
           return JSON.parse(response.body)
         });
   };
   
 
   sendMessage(content){
-    if(!content)throw new Error("Content to send not defined!")
-    if(content === "")throw new Error("cannot send an empty message")
+    if(!content)KeyMissingError("Content")
+    if(content === "")KeyMissingError("Content")
         let msg;
             msg = {
                 "content": content
@@ -54,8 +55,8 @@ class channel {
         };
         console.log(msg)
         request(options, function (error, response) { 
-          if(JSON.parse(response.body).message === "Unknown Channel")throw new Error("Discord API error: I can't find the channel")
-          if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error("discord api error: you are not logged in");
+          if(JSON.parse(response.body).message === "Unknown Channel")console.error(DiscordAPI.UNKNOWN_CHANNEL)
+          if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error(httpErrors.UNAUTHORIZED);
           return JSON.parse(response.body)
         });
   };
