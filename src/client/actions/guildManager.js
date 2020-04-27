@@ -4,7 +4,7 @@ const qdb = require("quick.db")
 const request = require("request")
 const tokendb = new qdb.table("discordhytoken")
 const fetch = require("node-fetch")
-const { DiscordAPI, TypeErrors, KeyMissingError, httpErrors } = require("../../Error/Errors.js")
+const { Errors, KeyMissingError } = require("../../Error/Errors.js")
 class guildManager {
   constructor(guildid) {
     this.client = JSON.parse(guildid)
@@ -98,8 +98,8 @@ _patch(){
         
         return new Promise(function(resolve, reject){
         request(options, function(error, response){
-          if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error(httpErrors.UNAUTHORIZED)
-          if(JSON.parse(response.body).message === "Unknown Guild")console.error(DiscordAPI.UNKNOWN_GUILD)
+          if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error(Errors.UNAUTHORIZED)
+          if(JSON.parse(response.body).message === "Unknown Guild")console.error(Errors.UNKNOWN_GUILD)
           
           return resolve(JSON.parse(response.body))
         })
@@ -124,8 +124,8 @@ _patch(){
         };
         return new Promise(function(resolve, reject){
         request(options, function (error, response) { 
-          if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error(httpErrors.UNAUTHORIZED)
-          if(JSON.parse(response.body).message === "Unknown Guild")console.error(DiscordAPI.UNKNOWN_GUILD)
+          if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error(Errors.UNAUTHORIZED)
+          if(JSON.parse(response.body).message === "Unknown Guild")console.error(Errors.UNKNOWN_GUILD)
           return resolve(JSON.parse(response.body))
         });
         })

@@ -1,17 +1,16 @@
-let DiscordErrors = {
+let Errors = {
+	//undefined errors
 	INVALID_TOKEN: "Discord API Error: An INVALID discord login token has been provided",
 	NO_TOKEN: "Discord API Error: Discord login token must not be null!",
 	CHANNEL_UNDEFINED: "Discord API Error: Channel Not Found",
 	UNKNOWN_GUILD: "Discord API Error: Unknown Guild",
-	UNKNOWN_CHANNEL: "Discord API Error: Unknown Channel"
-}
+	UNKNOWN_CHANNEL: "Discord API Error: Unknown Channel",
 
-let httpErrors = {
+	//httperrors
 	UNAUTHORIZED: "401 Unauthorized: Not logged in or Token Invalid",
-	NOT_FOUND: "404 Not Found"
-}
+	NOT_FOUND: "404 Not Found",
 
-let TypeErrors = {
+	//type errors
 	STRING: 'Input must be type of string!',
 	FUNCTION: 'Input must be type of function!',
 	BOOLEAN: 'Input must be type of boolean!',
@@ -25,9 +24,7 @@ function KeyMissingError(key){
 
 
 module.exports = {
-	DiscordAPI: DiscordErrors,
-	TypeErrors: TypeErrors,
-	KeyMissingError: KeyMissingError,
-	httpErrors: httpErrors
+	Errors: Errors,
+	KeyMissingError: KeyMissingError
 }
 

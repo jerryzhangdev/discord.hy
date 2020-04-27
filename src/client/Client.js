@@ -8,9 +8,15 @@ const Guild = require("./actions/guildManager.js")
 const qdb = require("quick.db")
 const tokendb = new qdb.table("discordhytoken")
 const db = new qdb.table("discordhydb")
+const GuildCollection = require("./Collection/GuildCollection.js")
+const UserCollection = require("./Collection/UserCollection.js")
 let websocketdata;
-var wss = new WebSocket('wss://gateway.discord.gg?v=6');
-const { DiscordAPI, TypeErrors, KeyMissingError, httpErrors } = require("../Error/Errors.js")
+const { Errors, KeyMissingError } = require("../Error/Errors.js")
+
+
+
+
+
 
 const fetch = require("node-fetch")
 function IsJsonString(str) {
@@ -21,12 +27,13 @@ function IsJsonString(str) {
     }
     return true;
 }
-
+let wss = new WebSocket('wss://gateway.discord.gg?v=6');
 class Client {
 	constructor(options = {}){
         this.websocketstat = options.websocketstat
         this.debug = options.debug
         this.reconnect = options.reconnect
+        this.usersid = []
         if(this.websocketstat){
             if(typeof this.websocketstat !== 'boolean')throw new TypeError(TypeErrors.BOOLEAN)
         }
@@ -39,25 +46,15 @@ class Client {
         if(!this.reconnect){
             this.reconnect === false
         }
+        this.wssurl = 'wss://gateway.discord.gg?v=6';
+        this._patch()
 	}
 
 	async login(logintoken){
         this.token = logintoken
 		
-        if(!logintoken || logintoken === "")throw new Error(DiscordAPI.NO_TOKEN)
-        if(typeof logintoken !== "string")throw new TypeError(TypeErrors.STRING)
-        var options = {
-            'method': 'GET',
-            'url': 'https://discordapp.com/api/users/@me',
-            'headers': {
-                'Authorization': `Bot ${logintoken}`,
-                'Content-Type': 'application/json'
-            }
-            };
-        
-        request(options, (error, response) => { 
-            if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error(DiscordAPI.INVALID_TOKEN);
-        });
+        if(!logintoken || logintoken === "")throw new Error(Errors.NO_TOKEN)
+        if(typeof logintoken !== "string")throw new TypeError(Errors.STRING)
     
         wss.on('open', ws => {
           let data = {
@@ -65,7 +62,7 @@ class Client {
           "d": {
             "token": logintoken,
             "properties": {
-              "$os": "windows"
+              "$os": "linux"
             }
           }
         }
@@ -75,12 +72,48 @@ class Client {
         }
         })
 
-        
-        if(this.websocketstat === true){
+                if(this.websocketstat === true){
             wss.on('close', ws => {
-                console.log('WebSocket Connection Lost!')
+                let closemessage;
+                if(ws === 4000){
+                    closemessage = "4000 Unknown Error"
+                }else if(ws === 4001){
+                    closemessage = "4001 Unknown Opcode"
+                }else if(ws === 4002){
+                    closemessage = "4002 Decode Error"
+                }else if(ws === 4003){
+                    closemessage = "4003 Not Authenticated"
+                }else if(ws === 4004){
+                    closemessage = "4004 Invalid Token"
+                }else if(ws === 4005){
+                    closemessage = "4005 Already Authenticated"
+                }else if(ws === 4007){
+                    closemessage = "4007 Invalid Seq"
+                }else if(ws === 4008){
+                    closemessage = "4008 Rate Limited"
+                }else if(ws === 4009){
+                    closemessage = "4009 Season Timeout"
+                }else if(ws === 4010){
+                    closemessage = "4010 Invalid Shard"
+                }else if(ws === 4011){
+                    closemessage = "4011 Sharding Required"
+                }else if(ws === 4012){
+                    closemessage = "4012 Invalid API version"
+                }else if(ws === 4013){
+                    closemessage = "4013 Invalid Intent(s)"
+                }else if(ws === 4014){
+                    closemessage = "4014 Disallowed Intent(s)"
+                }
+                console.log('WebSocket Connection Lost! | Error: ' + closemessage)
             })
         }
+
+        wss.on("close", (data) => {
+            tokendb.delete('token')
+            if(data === 4004)throw new Error(Errors.INVALID_TOKEN)
+        })
+        
+
 
         if(this.reconnect === true){
             wss.on('close', ws => {
@@ -166,14 +199,29 @@ class Client {
         return tokendb.get('token.token')
     }
 
-    
+    async _patch(){
+        var guildoptions = {
+          'method': 'GET',
+          'headers': {
+            'Authorization': `Bot ${tokendb.get('token.token')}`,
+          }
+        };
+        let awaiting = await fetch('https://discordapp.com/api/users/@me/guilds', guildoptions);
+        let guildjson = await awaiting.json()
+
+
+        this.guilds = new GuildCollection(guildjson)
+        
+
+        
+    }
 
     
 
     on(event, callback){
         if(!event)KeyMissingError("event")
         if(!callback)KeyMissingError("callback")
-        if(typeof callback !== "function")throw new TypeError(TypeErrors.FUNCTION)
+        if(typeof callback !== "function")throw new TypeError(Errors.FUNCTION)
 
 
         //channelCreate

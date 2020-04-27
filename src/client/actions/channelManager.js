@@ -1,7 +1,7 @@
 "use strict";
 
 const qdb = require("quick.db")
-const { DiscordAPI, TypeErrors, KeyMissingError, httpErrors } = require("../../Error/Errors.js")
+const { Errors, KeyMissingError } = require("../../Error/Errors.js")
 const request = require("request")
 const tokendb = new qdb.table("discordhytoken")
 class channel {
@@ -29,8 +29,8 @@ class channel {
           body: JSON.stringify(msg)
         };
         request(options, function (error, response) { 
-          if(JSON.parse(response.body).message === "Unknown Channel")console.error(DiscordAPI.UNKNOWN_CHANNEL)
-          if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error(httpErrors.UNAUTHORIZED);
+          if(JSON.parse(response.body).message === "Unknown Channel")console.error(Errors.UNKNOWN_CHANNEL)
+          if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error(Errors.UNAUTHORIZED);
           return JSON.parse(response.body)
         });
   };
@@ -55,8 +55,8 @@ class channel {
         };
         console.log(msg)
         request(options, function (error, response) { 
-          if(JSON.parse(response.body).message === "Unknown Channel")console.error(DiscordAPI.UNKNOWN_CHANNEL)
-          if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error(httpErrors.UNAUTHORIZED);
+          if(JSON.parse(response.body).message === "Unknown Channel")console.error(Errors.UNKNOWN_CHANNEL)
+          if(JSON.parse(response.body).message === "401: Unauthorized")throw new Error(Errors.UNAUTHORIZED);
           return JSON.parse(response.body)
         });
   };
