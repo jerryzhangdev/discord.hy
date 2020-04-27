@@ -9,4 +9,4 @@ client.on("message", msg => {
     console.log(msg)
 })
  
-client.login("Njg4NDI3MDg1NjE3NjkyOTYw.XqWtXg.AKkzd1WtCDSFaV7Nr7z2MzuAHD0")
+client.login("your token")
