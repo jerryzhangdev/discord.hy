@@ -5,6 +5,7 @@ let Errors = {
 	CHANNEL_UNDEFINED: "Discord API Error: Channel Not Found",
 	UNKNOWN_GUILD: "Discord API Error: Unknown Guild",
 	UNKNOWN_CHANNEL: "Discord API Error: Unknown Channel",
+	UNKNOWN_STATUSCODE: 'Unknown Status Code was provided',
 
 	//httperrors
 	UNAUTHORIZED: "401 Unauthorized: Not logged in or Token Invalid",

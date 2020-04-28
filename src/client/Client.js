@@ -9,7 +9,6 @@ const qdb = require("quick.db")
 const tokendb = new qdb.table("discordhytoken")
 const db = new qdb.table("discordhydb")
 const GuildCollection = require("./Collection/GuildCollection.js")
-const UserCollection = require("./Collection/UserCollection.js")
 let websocketdata;
 const { Errors, KeyMissingError } = require("../Error/Errors.js")
 
@@ -128,7 +127,7 @@ class Client {
                 }
                 }
                 wss.send(JSON.stringify(data))
-                console.log("Reconnected")
+                console.log("If everything went well the bot should be reconnected")
             })
         }
 
@@ -165,6 +164,33 @@ class Client {
             setTimeout(resolve, ms);
         });
     } 
+
+
+    setPresence(name, type, status, afk){
+        let typelist = [0, 1, 2, 4]
+        let statuscode = ['online', 'dnd', 'idle', 'invisible', 'offline']
+        if(typeof name !== 'string')throw new TypeError(Errors.STRING)
+        if(typeof type !== 'number')throw new TypeError(Errors.NUMBER)
+        if(!typelist.includes(type))throw new Error(Errors.UNKNOWN_STATUSCODE)
+        if(typeof status !== 'string')throw new TypeError(Errors.STRING)
+        if(!statuscode.includes(status.toLowerCase()))throw new Error(Errors.UNKNOWN_STATUSCODE)
+        if(typeof afk !== 'boolean')throw new TypeError(Errors.BOOLEAN)
+        let presencedata = {
+          "op": 3,
+          "d": {
+            "since": 91879201,
+            "game": {
+              "name": name,
+              "type": type
+            },
+            "status": status.toLowerCase(),
+            "afk": afk
+          }
+        }
+
+        wss.send(JSON.stringify(presencedata))
+    }
+
 
 
     async getChannel(id){
@@ -208,10 +234,9 @@ class Client {
         };
         let awaiting = await fetch('https://discordapp.com/api/users/@me/guilds', guildoptions);
         let guildjson = await awaiting.json()
-
+        
 
         this.guilds = new GuildCollection(guildjson)
-        
 
         
     }
@@ -408,7 +433,21 @@ class Client {
                             "Authorization": `Bot ${tokendb.get("token.token")}`
                         }
                     })
-
+                this.type = JSON.parse(data).d.type
+                this.tts = JSON.parse(data).d.tts
+                this.timestamp = JSON.parse(data).d.timestamp
+                this.pinned = JSON.parse(data).d.pinned
+                this.mentions = JSON.parse(data).d.mentions
+                this.mentionRoles = JSON.parse(data).d.mention_roles
+                this.mentionEveryone = JSON.parse(data).d.mention_everyone
+                this.member = JSON.parse(data).d.member
+                this.id = JSON.parse(data).d.id
+                this.flags = JSON.parse(data).d.flags
+                this.editedTimestamp = JSON.parse(data).d.edited_timestamp
+                this.content = JSON.parse(data).d.content
+                this.attachments = JSON.parse(data).d.attachments
+                this.guildid = JSON.parse(data).d.guild_id
+                this.channelid = JSON.parse(data).d.channel_id
                 let guildData = await resp.json()
 
                 this.guild = new Guild(JSON.stringify(guildData))

@@ -7,7 +7,6 @@ const tokendb = new qdb.table("discordhytoken")
 class channel {
   constructor(client) {
     this.client = client
-    console.log(client)
   }
 
   sendEmbed(content){
