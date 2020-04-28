@@ -1,12 +1,14 @@
 let Discord = require("../src/index.js")// import library | npm i discord.hy
-let client = new Discord.Client({ websocketstat: true, debug: false });//set up client with options
+let client = new Discord.Client({ websocketstat: true, debug: false, reconnect: true });//set up client with options
 
-client.on("ready", (data) => {
-    
+
+client.on('ready', data => {
+    client.setPresence("Testing", 0, 'online', false)
 })
- 
+
 client.on("message", msg => {
-    console.log(msg)
+    if(msg.author.bot)return
+    msg.channel.sendMessage(msg.timestamp)
 })
  
-client.login("Njg4NDI3MDg1NjE3NjkyOTYw.XqWtXg.AKkzd1WtCDSFaV7Nr7z2MzuAHD0")
+client.login("")
