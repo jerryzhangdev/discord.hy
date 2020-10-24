@@ -1,7 +1,7 @@
 {
   "name": "discord.hy",
   "version": "1.3.9",
-  "description": "A advanced **modern** discord bot making package using it's official api.",
+  "description": "An advanced and **modern** Discord bot-making package using its official api.",
   "main": "./src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
