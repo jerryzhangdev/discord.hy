@@ -21,7 +21,7 @@
   "author": "Hydrogen Studio <hydrogen.studio.llc@gmail.com>",
   "license": "Apache-2.0",
   "dependencies": {
-    "node-fetch": "^2.6.0",
+    "node-fetch": "^3.1.1",
     "quick.db": "^7.1.1",
     "request": "^2.88.2",
     "ws": "^7.2.3",
